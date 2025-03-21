@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file: db.sqlite"
+}
+
+model Letter {
+  id         String     @id @unique @default(cuid())
+  title      String
+  message    String
+  date       String
+  linkCustom String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  Question   Question[]
+
+  @@map("letters")
+}
+
+model Question {
+  id         String   @id @unique @default(cuid())
+  title      String
+  letter_id  String
+  letterId   Letter   @relation(fields: [letter_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  Answer     Answer[]
+
+  @@map("questions")
+}
+
+model Answer {
+  id          String   @id @unique @default(cuid())
+  title       String
+  question_id String
+  questionId  Question @relation(fields: [question_id], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  @@map("answers")
+}
